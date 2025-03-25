@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phuong's Cat - Công cụ tính trọng lượng thép</title>
+    <title>Công cụ tính trọng lượng thép</title>
     <style>
         :root {
-            --primary-color: #ff69b4;
-            --primary-light: #ffb6c1;
-            --primary-dark: #db7093;
+            --primary-color: #007bff;
+            --primary-light: #b3d7ff;
+            --primary-dark: #0056b3;
             --text-color: #333;
-            --bg-color: #fff5f7;
-            --cat-pink: #ffc0cb;
+            --bg-color: #f8f9fa;
         }
         
         body {
@@ -21,8 +20,6 @@
             background-color: var(--bg-color);
             margin: 0;
             padding: 0;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path fill="%23ffc0cb" fill-opacity="0.1" d="M30,50 Q50,30 70,50 Q50,70 30,50 Z"/></svg>');
-            background-size: 100px;
         }
         
         .container {
@@ -39,32 +36,11 @@
             border-radius: 10px;
             margin-bottom: 30px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .cat-corner {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            bottom: 10px;
-            right: 10px;
-            opacity: 0.3;
         }
         
         h1 {
             margin: 0;
             font-size: 2.2em;
-            position: relative;
-            display: inline-block;
-        }
-        
-        h1::after {
-            content: "🐱";
-            position: absolute;
-            right: -40px;
-            top: -10px;
-            font-size: 1.5em;
         }
         
         .author {
@@ -79,20 +55,6 @@
             padding: 25px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             margin-bottom: 30px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .calculator::before {
-            content: "";
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 40px;
-            height: 40px;
-            background-color: var(--cat-pink);
-            border-radius: 50%;
-            opacity: 0.2;
         }
         
         .form-group {
@@ -117,7 +79,7 @@
         
         select:focus, input:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.3);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
             outline: none;
         }
         
@@ -139,11 +101,6 @@
         
         button:hover {
             background-color: var(--primary-dark);
-        }
-        
-        button::after {
-            content: "🐾";
-            margin-left: 8px;
         }
         
         .result {
@@ -222,10 +179,28 @@
             margin: 0 auto 15px;
         }
         
-        .cat-signature {
-            font-style: italic;
-            color: var(--primary-color);
-            font-weight: bold;
+        .pipe-converter {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+        }
+        
+        .pipe-converter h3 {
+            margin-top: 0;
+            color: var(--primary-dark);
+        }
+        
+        .converter-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        
+        .converter-row select,
+        .converter-row input {
+            flex: 1;
         }
         
         @media (max-width: 768px) {
@@ -241,13 +216,12 @@
                 font-size: 1.8em;
             }
             
-            h1::after {
-                right: -30px;
-                font-size: 1.2em;
-            }
-            
             .pipe-size-container {
                 max-height: 300px;
+            }
+            
+            .converter-row {
+                flex-direction: column;
             }
         }
     </style>
@@ -256,8 +230,7 @@
     <div class="container">
         <header>
             <h1>CÔNG CỤ TÍNH TRỌNG LƯỢNG THÉP</h1>
-            <div class="author">by Lê Phương - Phuong's Cat</div>
-            <div class="cat-corner">🐱</div>
+            <div class="author">by Lê Phương</div>
         </header>
         
         <div class="calculator">
@@ -282,6 +255,11 @@
             </div>
             
             <div class="form-group">
+                <label for="length">Chiều dài (m):</label>
+                <input type="number" id="length" step="0.01" min="0" value="1">
+            </div>
+            
+            <div class="form-group">
                 <label for="material">Chọn vật liệu:</label>
                 <select id="material">
                     <option value="7.85">Carbon / Hardox / XAR / Everhard (7.85 g/cm³)</option>
@@ -295,11 +273,6 @@
                 </select>
             </div>
             
-            <div class="form-group">
-                <label for="length">Chiều dài (m):</label>
-                <input type="number" id="length" step="0.01" min="0" value="1">
-            </div>
-            
             <button onclick="calculateWeight()">Tính trọng lượng</button>
             
             <div id="result" class="result"></div>
@@ -307,6 +280,21 @@
         
         <div class="formula-section">
             <h2>Bảng quy đổi kích thước ống thép</h2>
+            <div class="pipe-converter">
+                <h3>Công cụ quy đổi kích thước ống</h3>
+                <div class="converter-row">
+                    <select id="pipeSize">
+                        <option value="">Chọn kích thước ống</option>
+                    </select>
+                    <select id="pipeStandard">
+                        <option value="">Chọn tiêu chuẩn</option>
+                    </select>
+                </div>
+                <div class="converter-row">
+                    <input type="number" id="pipeThickness" placeholder="Độ dày (mm)" readonly>
+                    <input type="number" id="pipeOD" placeholder="Đường kính ngoài (mm)" readonly>
+                </div>
+            </div>
             <div class="pipe-size-container">
                 <table class="pipe-size-table" id="pipeSizeTable">
                     <!-- Table will be generated by JavaScript -->
@@ -406,48 +394,49 @@
         
         <footer>
             <p>Công cụ tính trọng lượng thép | © 2023</p>
-            <p>Made with ❤️ by <span class="cat-signature">Lê Phương & Phuong's Cat</span></p>
+            <p>Made with ❤️ by Lê Phương</p>
         </footer>
     </div>
 
     <script>
+        // Pipe data structure
+        const pipeData = [
+            // NPS, DN, OD, SCH5S, SCH10S, SCH40S, SCH80S, SCH10, SCH20, SCH30, SCH40, STD, SCH60, SCH80, XS, SCH100, SCH120, SCH140, SCH160, XXS
+            ['1/8"', '6', '10.3', '', '1.24', '1.73', '2.41', '1.24', '', '1.45', '1.73', '1.73', '', '2.41', '2.41', '', '', '', '', ''],
+            ['1/4"', '8', '13.7', '', '1.65', '2.24', '3.02', '1.65', '', '1.85', '2.24', '2.24', '', '3.02', '3.02', '', '', '', '', ''],
+            ['3/8"', '10', '17.1', '', '1.65', '2.31', '3.2', '1.65', '', '1.85', '2.31', '2.31', '', '3.2', '3.2', '', '', '', '', ''],
+            ['1/2"', '15', '21.3', '1.65', '2.11', '2.77', '3.73', '2.11', '', '2.41', '2.77', '2.77', '', '3.73', '3.73', '', '', '', '4.78', '7.47'],
+            ['3/4"', '20', '26.7', '1.65', '2.11', '2.87', '3.91', '2.11', '', '2.41', '2.87', '2.87', '', '3.91', '3.91', '', '', '', '5.56', '7.82'],
+            ['1"', '25', '33.4', '1.65', '2.77', '3.38', '4.55', '2.77', '', '2.9', '3.38', '3.38', '', '4.55', '4.55', '', '', '', '6.35', '9.09'],
+            ['1-1/4"', '32', '42.2', '1.65', '2.77', '3.56', '4.85', '2.77', '', '2.97', '3.56', '3.56', '', '4.85', '4.85', '', '', '', '6.35', '9.7'],
+            ['1-1/2"', '40', '48.3', '1.65', '2.77', '3.68', '5.08', '2.77', '', '3.18', '3.68', '3.68', '', '5.08', '5.08', '', '', '', '7.14', '10.15'],
+            ['2"', '50', '60.3', '1.65', '2.77', '3.91', '5.54', '2.77', '', '3.18', '3.91', '3.91', '', '5.54', '5.54', '', '', '', '8.74', '11.07'],
+            ['2-1/2"', '65', '73', '2.11', '3.05', '5.16', '7.01', '3.05', '', '4.78', '5.16', '5.16', '', '7.01', '7.01', '', '', '', '9.53', '14.02'],
+            ['3"', '80', '88.9', '2.11', '3.05', '5.49', '7.62', '3.05', '', '4.78', '5.49', '5.49', '', '7.62', '7.62', '', '', '', '11.13', '15.24'],
+            ['3-1/2"', '90', '101.6', '2.11', '3.05', '5.74', '8.08', '3.05', '', '4.78', '5.74', '5.74', '', '8.08', '8.08', '', '', '', '', ''],
+            ['4"', '100', '114.3', '2.11', '3.05', '6.02', '8.56', '3.05', '', '4.78', '6.02', '6.02', '', '8.56', '8.56', '', '11.13', '', '13.49', '17.12'],
+            ['5"', '125', '141.3', '2.77', '3.4', '6.55', '9.53', '3.4', '', '', '6.55', '6.55', '', '9.53', '9.53', '', '12.7', '', '15.88', '19.05'],
+            ['6"', '150', '168.3', '2.77', '3.4', '7.11', '10.97', '3.4', '', '', '7.11', '7.11', '', '10.97', '10.97', '', '14.27', '', '18.26', '21.95'],
+            ['8"', '200', '219.1', '2.77', '3.76', '8.18', '12.7', '3.76', '6.35', '7.04', '8.18', '8.18', '10.31', '12.7', '12.7', '15.09', '18.26', '20.62', '23.01', '22.23'],
+            ['10"', '250', '273.1', '3.4', '4.19', '9.27', '12.7', '4.19', '6.35', '7.8', '9.27', '9.27', '12.7', '15.09', '12.7', '18.26', '21.44', '25.4', '28.58', '25.4'],
+            ['12"', '300', '323.9', '3.96', '4.57', '9.53', '12.7', '4.57', '6.35', '8.38', '10.31', '9.53', '14.27', '17.48', '12.7', '21.44', '25.4', '28.58', '33.32', '25.4'],
+            ['14"', '350', '355.6', '3.96', '4.78', '9.53', '12.7', '6.35', '7.92', '9.53', '11.13', '9.53', '15.09', '19.05', '12.7', '23.83', '27.79', '31.75', '35.71', ''],
+            ['16"', '400', '406.4', '4.19', '4.78', '9.53', '12.7', '6.35', '7.92', '9.53', '12.7', '9.53', '16.66', '21.44', '12.7', '26.19', '30.96', '36.53', '40.49', ''],
+            ['18"', '450', '457.2', '4.19', '4.78', '9.53', '12.7', '6.35', '7.92', '11.13', '14.27', '9.53', '19.05', '23.83', '12.7', '29.36', '34.93', '39.67', '45.24', ''],
+            ['20"', '500', '508', '4.78', '5.54', '9.53', '12.7', '6.35', '9.53', '12.7', '15.09', '9.53', '20.62', '26.19', '12.7', '32.54', '38.1', '44.45', '50.01', ''],
+            ['22"', '550', '558.8', '4.78', '5.54', '9.53', '12.7', '6.35', '9.53', '12.7', '', '9.53', '22.23', '28.58', '12.7', '34.93', '41.28', '47.63', '53.98', ''],
+            ['24"', '600', '609.6', '5.54', '6.35', '9.53', '12.7', '6.35', '9.53', '14.27', '17.48', '9.53', '24.61', '30.96', '12.7', '38.89', '46.02', '52.37', '59.54', '']
+        ];
+
+        const pipeHeaders = [
+            'NPS', 'DN', 'OD (mm)', 'SCH5S', 'SCH10S', 'SCH40S', 'SCH80S', 'SCH10', 'SCH20', 'SCH30', 
+            'SCH40', 'STD', 'SCH60', 'SCH80', 'XS', 'SCH100', 'SCH120', 'SCH140', 'SCH160', 'XXS'
+        ];
+
         // Generate pipe size table
         function generatePipeSizeTable() {
-            const pipeData = [
-                // NPS, DN, OD, SCH5S, SCH10S, SCH40S, SCH80S, SCH10, SCH20, SCH30, SCH40, STD, SCH60, SCH80, XS, SCH100, SCH120, SCH140, SCH160, XXS
-                ['1/8"', '6', '10.3', '', '1.24', '1.73', '2.41', '1.24', '', '1.45', '1.73', '1.73', '', '2.41', '2.41', '', '', '', '', ''],
-                ['1/4"', '8', '13.7', '', '1.65', '2.24', '3.02', '1.65', '', '1.85', '2.24', '2.24', '', '3.02', '3.02', '', '', '', '', ''],
-                ['3/8"', '10', '17.1', '', '1.65', '2.31', '3.2', '1.65', '', '1.85', '2.31', '2.31', '', '3.2', '3.2', '', '', '', '', ''],
-                ['1/2"', '15', '21.3', '1.65', '2.11', '2.77', '3.73', '2.11', '', '2.41', '2.77', '2.77', '', '3.73', '3.73', '', '', '', '4.78', '7.47'],
-                ['3/4"', '20', '26.7', '1.65', '2.11', '2.87', '3.91', '2.11', '', '2.41', '2.87', '2.87', '', '3.91', '3.91', '', '', '', '5.56', '7.82'],
-                ['1"', '25', '33.4', '1.65', '2.77', '3.38', '4.55', '2.77', '', '2.9', '3.38', '3.38', '', '4.55', '4.55', '', '', '', '6.35', '9.09'],
-                ['1-1/4"', '32', '42.2', '1.65', '2.77', '3.56', '4.85', '2.77', '', '2.97', '3.56', '3.56', '', '4.85', '4.85', '', '', '', '6.35', '9.7'],
-                ['1-1/2"', '40', '48.3', '1.65', '2.77', '3.68', '5.08', '2.77', '', '3.18', '3.68', '3.68', '', '5.08', '5.08', '', '', '', '7.14', '10.15'],
-                ['2"', '50', '60.3', '1.65', '2.77', '3.91', '5.54', '2.77', '', '3.18', '3.91', '3.91', '', '5.54', '5.54', '', '', '', '8.74', '11.07'],
-                ['2-1/2"', '65', '73', '2.11', '3.05', '5.16', '7.01', '3.05', '', '4.78', '5.16', '5.16', '', '7.01', '7.01', '', '', '', '9.53', '14.02'],
-                ['3"', '80', '88.9', '2.11', '3.05', '5.49', '7.62', '3.05', '', '4.78', '5.49', '5.49', '', '7.62', '7.62', '', '', '', '11.13', '15.24'],
-                ['3-1//2"', '90', '101.6', '2.11', '3.05', '5.74', '8.08', '3.05', '', '4.78', '5.74', '5.74', '', '8.08', '8.08', '', '', '', '', ''],
-                ['4"', '100', '114.3', '2.11', '3.05', '6.02', '8.56', '3.05', '', '4.78', '6.02', '6.02', '', '8.56', '8.56', '', '11.13', '', '13.49', '17.12'],
-                ['5"', '125', '141.3', '2.77', '3.4', '6.55', '9.53', '3.4', '', '', '6.55', '6.55', '', '9.53', '9.53', '', '12.7', '', '15.88', '19.05'],
-                ['6"', '150', '168.3', '2.77', '3.4', '7.11', '10.97', '3.4', '', '', '7.11', '7.11', '', '10.97', '10.97', '', '14.27', '', '18.26', '21.95'],
-                ['8"', '200', '219.1', '2.77', '3.76', '8.18', '12.7', '3.76', '6.35', '7.04', '8.18', '8.18', '10.31', '12.7', '12.7', '15.09', '18.26', '20.62', '23.01', '22.23'],
-                ['10"', '250', '273.1', '3.4', '4.19', '9.27', '12.7', '4.19', '6.35', '7.8', '9.27', '9.27', '12.7', '15.09', '12.7', '18.26', '21.44', '25.4', '28.58', '25.4'],
-                ['12"', '300', '323.9', '3.96', '4.57', '9.53', '12.7', '4.57', '6.35', '8.38', '10.31', '9.53', '14.27', '17.48', '12.7', '21.44', '25.4', '28.58', '33.32', '25.4'],
-                ['14"', '350', '355.6', '3.96', '4.78', '9.53', '12.7', '6.35', '7.92', '9.53', '11.13', '9.53', '15.09', '19.05', '12.7', '23.83', '27.79', '31.75', '35.71', ''],
-                ['16"', '400', '406.4', '4.19', '4.78', '9.53', '12.7', '6.35', '7.92', '9.53', '12.7', '9.53', '16.66', '21.44', '12.7', '26.19', '30.96', '36.53', '40.49', ''],
-                ['18"', '450', '457.2', '4.19', '4.78', '9.53', '12.7', '6.35', '7.92', '11.13', '14.27', '9.53', '19.05', '23.83', '12.7', '29.36', '34.93', '39.67', '45.24', ''],
-                ['20"', '500', '508', '4.78', '5.54', '9.53', '12.7', '6.35', '9.53', '12.7', '15.09', '9.53', '20.62', '26.19', '12.7', '32.54', '38.1', '44.45', '50.01', ''],
-                ['22"', '550', '558.8', '4.78', '5.54', '9.53', '12.7', '6.35', '9.53', '12.7', '', '9.53', '22.23', '28.58', '12.7', '34.93', '41.28', '47.63', '53.98', ''],
-                ['24"', '600', '609.6', '5.54', '6.35', '9.53', '12.7', '6.35', '9.53', '14.27', '17.48', '9.53', '24.61', '30.96', '12.7', '38.89', '46.02', '52.37', '59.54', '']
-            ];
-
-            const headers = [
-                'NPS', 'DN', 'OD (mm)', 'SCH5S', 'SCH10S', 'SCH40S', 'SCH80S', 'SCH10', 'SCH20', 'SCH30', 
-                'SCH40', 'STD', 'SCH60', 'SCH80', 'XS', 'SCH100', 'SCH120', 'SCH140', 'SCH160', 'XXS'
-            ];
-
             let tableHTML = '<thead><tr>';
-            headers.forEach(header => {
+            pipeHeaders.forEach(header => {
                 tableHTML += `<th>${header}</th>`;
             });
             tableHTML += '</tr></thead><tbody>';
@@ -466,6 +455,65 @@
 
             tableHTML += '</tbody>';
             document.getElementById('pipeSizeTable').innerHTML = tableHTML;
+        }
+
+        // Populate pipe size dropdown
+        function populatePipeSizeDropdown() {
+            const pipeSizeSelect = document.getElementById('pipeSize');
+            pipeData.forEach(pipe => {
+                const option = document.createElement('option');
+                option.value = pipe[0]; // NPS value
+                option.textContent = `${pipe[0]} (DN ${pipe[1]})`;
+                pipeSizeSelect.appendChild(option);
+            });
+        }
+
+        // Populate pipe standard dropdown
+        function populatePipeStandardDropdown() {
+            const pipeStandardSelect = document.getElementById('pipeStandard');
+            
+            // Clear existing options except the first one
+            while (pipeStandardSelect.options.length > 1) {
+                pipeStandardSelect.remove(1);
+            }
+            
+            // Get selected pipe size
+            const selectedSize = document.getElementById('pipeSize').value;
+            if (!selectedSize) return;
+            
+            // Find the pipe data
+            const pipe = pipeData.find(p => p[0] === selectedSize);
+            if (!pipe) return;
+            
+            // Add standards that have values
+            for (let i = 3; i < pipeHeaders.length; i++) {
+                if (pipe[i] && pipe[i] !== '') {
+                    const option = document.createElement('option');
+                    option.value = pipeHeaders[i];
+                    option.textContent = pipeHeaders[i];
+                    pipeStandardSelect.appendChild(option);
+                }
+            }
+        }
+
+        // Update pipe converter fields
+        function updatePipeConverterFields() {
+            const selectedSize = document.getElementById('pipeSize').value;
+            const selectedStandard = document.getElementById('pipeStandard').value;
+            
+            if (!selectedSize || !selectedStandard) return;
+            
+            // Find the pipe data
+            const pipe = pipeData.find(p => p[0] === selectedSize);
+            if (!pipe) return;
+            
+            // Find the standard index
+            const standardIndex = pipeHeaders.indexOf(selectedStandard);
+            if (standardIndex === -1) return;
+            
+            // Update fields
+            document.getElementById('pipeThickness').value = pipe[standardIndex];
+            document.getElementById('pipeOD').value = pipe[2]; // OD is always at index 2
         }
 
         // Dynamic input fields based on shape selection
@@ -699,7 +747,6 @@
             resultElement.innerHTML = `
                 <p><strong>Trọng lượng:</strong> ${weight.toFixed(2)} kg</p>
                 <p><strong>Công thức sử dụng:</strong> ${formulaUsed}</p>
-                <p style="text-align: center; margin-top: 10px; font-size: 1.5em;">${weight > 1000 ? '🐈‍⬛' : weight > 100 ? '🐈' : '🐱'}</p>
             `;
             resultElement.style.display = 'block';
         }
@@ -711,6 +758,17 @@
             
             // Generate pipe size table
             generatePipeSizeTable();
+            
+            // Populate pipe size dropdown
+            populatePipeSizeDropdown();
+            
+            // Set up event listeners for pipe converter
+            document.getElementById('pipeSize').addEventListener('change', function() {
+                populatePipeStandardDropdown();
+                updatePipeConverterFields();
+            });
+            
+            document.getElementById('pipeStandard').addEventListener('change', updatePipeConverterFields);
         });
     </script>
 </body>
